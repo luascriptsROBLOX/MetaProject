@@ -13,7 +13,7 @@ return function()
         gui.ResetOnSpawn = false
         gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-        -- Blur Background
+        -- Clean blur
         pcall(function()
             local blur = Instance.new("BlurEffect")
             blur.Size = 24
@@ -21,23 +21,28 @@ return function()
             blur.Parent = Lighting
         end)
 
-        -- Configs
         local Title = config.Title or "XeraUltron"
         local SubTitle = config.SubTitle or "Meta Core System"
         local Stages = config.Stages or {"Loading..."}
         local OnFinish = config.OnFinish or function() end
 
-        -- Background Frame
+        -- Base Frame
         local container = Instance.new("Frame", gui)
         container.Size = UDim2.new(1, 0, 1, 0)
-        container.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-        container.BackgroundTransparency = 0
+        container.BackgroundColor3 = Color3.fromRGB(60, 60, 70) -- brighter background
         container.Name = "MainFrame"
 
-        -- Title Label
-        local titleLabel = Instance.new("TextLabel", container)
-        titleLabel.Size = UDim2.new(1, 0, 0.15, 0)
-        titleLabel.Position = UDim2.new(0, 0, 0.12, 0)
+        -- Center Group
+        local centerFrame = Instance.new("Frame", container)
+        centerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+        centerFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+        centerFrame.Size = UDim2.new(0.7, 0, 0.5, 0)
+        centerFrame.BackgroundTransparency = 1
+
+        -- Title
+        local titleLabel = Instance.new("TextLabel", centerFrame)
+        titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
+        titleLabel.Position = UDim2.new(0, 0, 0, 0)
         titleLabel.BackgroundTransparency = 1
         titleLabel.Text = Title
         titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -45,10 +50,10 @@ return function()
         titleLabel.TextScaled = true
         titleLabel.TextTransparency = 1
 
-        -- Subtitle Label
-        local subLabel = Instance.new("TextLabel", container)
-        subLabel.Size = UDim2.new(1, 0, 0.1, 0)
-        subLabel.Position = UDim2.new(0, 0, 0.27, 0)
+        -- Subtitle
+        local subLabel = Instance.new("TextLabel", centerFrame)
+        subLabel.Size = UDim2.new(1, 0, 0.15, 0)
+        subLabel.Position = UDim2.new(0, 0, 0.22, 0)
         subLabel.BackgroundTransparency = 1
         subLabel.Text = SubTitle
         subLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -56,24 +61,24 @@ return function()
         subLabel.TextScaled = true
         subLabel.TextTransparency = 1
 
-        -- Progress Bar Holder
-        local barHolder = Instance.new("Frame", container)
-        barHolder.Size = UDim2.new(0.6, 0, 0, 28)
-        barHolder.Position = UDim2.new(0.2, 0, 0.47, 0)
+        -- Progress bar container
+        local barHolder = Instance.new("Frame", centerFrame)
+        barHolder.Size = UDim2.new(0.8, 0, 0, 26)
+        barHolder.Position = UDim2.new(0.1, 0, 0.45, 0)
         barHolder.BackgroundTransparency = 1
 
-        -- Progress Bar Fill
+        -- Bar
         local progressBar = Instance.new("Frame", barHolder)
         progressBar.Name = "ProgressBar"
         progressBar.Size = UDim2.new(0, 0, 1, 0)
         progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
         local barCorner = Instance.new("UICorner", progressBar)
-        barCorner.CornerRadius = UDim.new(0, 14)
+        barCorner.CornerRadius = UDim.new(0, 13)
 
-        -- Stage Text
-        local stageLabel = Instance.new("TextLabel", container)
-        stageLabel.Size = UDim2.new(1, 0, 0.08, 0)
-        stageLabel.Position = UDim2.new(0, 0, 0.60, 0)
+        -- Stage
+        local stageLabel = Instance.new("TextLabel", centerFrame)
+        stageLabel.Size = UDim2.new(1, 0, 0.1, 0)
+        stageLabel.Position = UDim2.new(0, 0, 0.62, 0)
         stageLabel.BackgroundTransparency = 1
         stageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         stageLabel.Font = Enum.Font.GothamBold
@@ -81,10 +86,10 @@ return function()
         stageLabel.TextTransparency = 1
         stageLabel.Text = ""
 
-        -- Footer Credits
+        -- Credits
         local credits = Instance.new("TextLabel", container)
-        credits.Size = UDim2.new(1, 0, 0.05, 0)
-        credits.Position = UDim2.new(0, 0, 0.93, 0)
+        credits.Size = UDim2.new(1, 0, 0.04, 0)
+        credits.Position = UDim2.new(0, 0, 0.96, 0)
         credits.BackgroundTransparency = 1
         credits.Text = "Made by Kokil | LuaScripts787 | XeraUltronTEAM"
         credits.Font = Enum.Font.GothamItalic
@@ -92,7 +97,7 @@ return function()
         credits.TextTransparency = 1
         credits.TextScaled = true
 
-        -- Start Animation
+        -- Animations
         TweenService:Create(titleLabel, TweenInfo.new(1), { TextTransparency = 0 }):Play()
         TweenService:Create(subLabel, TweenInfo.new(1.2), { TextTransparency = 0 }):Play()
         task.wait(1.4)
