@@ -1,4 +1,4 @@
--- XeraUltron Loader UI - Final Public UI Version
+-- Final Silent + Clean XeraUltron Loader UI
 return function()
     local UI = {}
 
@@ -9,15 +9,15 @@ return function()
         local Title = config.Title or "XeraUltron"
         local SubTitle = config.SubTitle or "Meta Solution"
         local Stages = config.Stages or {"Loading..."}
-        local Sound = config.Sound ~= false
         local OnFinish = config.OnFinish or function() end
 
-        -- GUI + Blur Setup
+        -- Blur background
         local blur = Instance.new("BlurEffect")
         blur.Size = 16
         blur.Name = "XeraBlur"
         blur.Parent = Lighting
 
+        -- Main GUI
         local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
         gui.Name = "XeraLoaderUI"
         gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -60,11 +60,9 @@ return function()
         local bar = Instance.new("Frame", barHolder)
         bar.Size = UDim2.new(0, 0, 1, 0)
         bar.Position = UDim2.new(0, 0, 0, 0)
-        bar.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+        bar.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
         bar.Name = "ProgressBar"
-
-        local round = Instance.new("UICorner", bar)
-        round.CornerRadius = UDim.new(0, 12)
+        Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 12)
 
         -- Stage Text
         local stageText = Instance.new("TextLabel", main)
@@ -88,38 +86,25 @@ return function()
         credits.TextColor3 = Color3.fromRGB(255, 255, 255)
         credits.TextTransparency = 1
 
-        -- Sound Effects
-        local sfx = nil
-        if Sound then
-            sfx = Instance.new("Sound", gui)
-            sfx.SoundId = "rbxassetid://9118823104"
-            sfx.Volume = 1
-        end
-
-        -- Animate UI In
+        -- Animate In
         TweenService:Create(title, TweenInfo.new(1), {TextTransparency = 0}):Play()
         TweenService:Create(sub, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
+        wait(1.3)
+        TweenService:Create(title, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {TextTransparency = 0.3}):Play()
 
-        delay(1.3, function()
-            local glow = TweenService:Create(title, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {TextTransparency = 0.3})
-            glow:Play()
-        end)
-
-        -- Stage Cycle
+        -- Stage cycle
         coroutine.wrap(function()
             for i, msg in ipairs(Stages) do
                 stageText.Text = msg
                 TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
                 TweenService:Create(bar, TweenInfo.new(0.5), {Size = UDim2.new(i / #Stages, 0, 1, 0)}):Play()
-                if sfx then sfx:Play() end
                 wait(1.2)
                 TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
-                wait(0.3)
+                wait(0.2)
             end
 
             TweenService:Create(credits, TweenInfo.new(1), {TextTransparency = 0}):Play()
             wait(2)
-
             blur:Destroy()
             gui:Destroy()
             OnFinish()
