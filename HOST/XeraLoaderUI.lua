@@ -13,22 +13,24 @@ return function()
         gui.ResetOnSpawn = false
         gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-        -- Optional Blur
-        local blur = Instance.new("BlurEffect")
-        blur.Size = 24
-        blur.Parent = Lighting
-        blur.Name = "XeraUILoaderBlur"
+        -- Safe Blur
+        pcall(function()
+            local blur = Instance.new("BlurEffect")
+            blur.Size = 24
+            blur.Name = "XeraUILoaderBlur"
+            blur.Parent = Lighting
+        end)
 
-        -- Config Vars
+        -- Config
         local Title = config.Title or "XeraUltron"
         local SubTitle = config.SubTitle or "Meta Core System"
-        local Stages = config.Stages or { "Loading..." }
+        local Stages = config.Stages or {"Loading..."}
         local OnFinish = config.OnFinish or function() end
 
-        -- Main container
+        -- Main Frame
         local container = Instance.new("Frame", gui)
         container.Size = UDim2.new(1, 0, 1, 0)
-        container.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+        container.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         container.BackgroundTransparency = 0
         container.Name = "MainFrame"
 
@@ -89,29 +91,30 @@ return function()
         credits.TextTransparency = 1
         credits.TextScaled = true
 
-        -- Anim Start
+        -- UI Animation Start
         TweenService:Create(titleLabel, TweenInfo.new(1), { TextTransparency = 0 }):Play()
         TweenService:Create(subLabel, TweenInfo.new(1.2), { TextTransparency = 0 }):Play()
-        wait(1.4)
+        task.wait(1.4)
 
-        -- Stage loop
         coroutine.wrap(function()
             for i, stageText in ipairs(Stages) do
                 stageLabel.Text = stageText
                 TweenService:Create(stageLabel, TweenInfo.new(0.3), { TextTransparency = 0 }):Play()
-                TweenService:Create(progressBar, TweenInfo.new(0.7), {
+                TweenService:Create(progressBar, TweenInfo.new(0.6), {
                     Size = UDim2.new(i / #Stages, 0, 1, 0)
                 }):Play()
-                wait(1.3)
+                task.wait(1.2)
                 TweenService:Create(stageLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
-                wait(0.2)
+                task.wait(0.1)
             end
 
             TweenService:Create(credits, TweenInfo.new(1), { TextTransparency = 0 }):Play()
-            wait(2)
+            task.wait(1.5)
 
             gui:Destroy()
-            blur:Destroy()
+            local blur = Lighting:FindFirstChild("XeraUILoaderBlur")
+            if blur then blur:Destroy() end
+
             OnFinish()
         end)()
     end
