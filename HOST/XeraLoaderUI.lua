@@ -1,113 +1,120 @@
 return function()
-    local UI = {}
+    local XeraUI = {}
 
-    function UI:Start(config)
+    function XeraUI:Start(config)
         local TweenService = game:GetService("TweenService")
-        local Lighting = game:GetService("Lighting")
         local Players = game:GetService("Players")
+        local Lighting = game:GetService("Lighting")
 
-        local Title = config.Title or "XeraUltron"
-        local SubTitle = config.SubTitle or "Meta Soul System"
-        local Stages = config.Stages or {"Loading..."}
-        local OnFinish = config.OnFinish or function() end
-
-        -- Blur
-        local blur = Instance.new("BlurEffect", Lighting)
-        blur.Size = 24
-        blur.Name = "XeraBlur"
-
-        -- Main UI
-        local gui = Instance.new("ScreenGui", Players.LocalPlayer:WaitForChild("PlayerGui"))
+        local player = Players.LocalPlayer
+        local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
         gui.Name = "XeraLoaderUI"
-        gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         gui.IgnoreGuiInset = true
         gui.ResetOnSpawn = false
+        gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-        local main = Instance.new("Frame", gui)
-        main.Size = UDim2.new(1, 0, 1, 0)
-        main.BackgroundTransparency = 1
-        main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+        -- Optional Blur
+        local blur = Instance.new("BlurEffect")
+        blur.Size = 24
+        blur.Parent = Lighting
+        blur.Name = "XeraUILoaderBlur"
 
-        local title = Instance.new("TextLabel", main)
-        title.Size = UDim2.new(0.9, 0, 0.15, 0)
-        title.Position = UDim2.new(0.05, 0, 0.15, 0)
-        title.BackgroundTransparency = 1
-        title.Text = Title
-        title.TextColor3 = Color3.new(1, 1, 1)
-        title.TextScaled = true
-        title.TextWrapped = true
-        title.TextTransparency = 1
-        title.Font = Enum.Font.GothamBlack
+        -- Config Vars
+        local Title = config.Title or "XeraUltron"
+        local SubTitle = config.SubTitle or "Meta Core System"
+        local Stages = config.Stages or { "Loading..." }
+        local OnFinish = config.OnFinish or function() end
 
-        local subtitle = Instance.new("TextLabel", main)
-        subtitle.Size = UDim2.new(0.8, 0, 0.1, 0)
-        subtitle.Position = UDim2.new(0.1, 0, 0.30, 0)
-        subtitle.BackgroundTransparency = 1
-        subtitle.Text = SubTitle
-        subtitle.TextColor3 = Color3.fromRGB(180, 180, 180)
-        subtitle.TextScaled = true
-        subtitle.TextWrapped = true
-        subtitle.TextTransparency = 1
-        subtitle.Font = Enum.Font.GothamMedium
+        -- Main container
+        local container = Instance.new("Frame", gui)
+        container.Size = UDim2.new(1, 0, 1, 0)
+        container.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+        container.BackgroundTransparency = 0
+        container.Name = "MainFrame"
 
-        local barHolder = Instance.new("Frame", main)
-        barHolder.Size = UDim2.new(0.6, 0, 0, 30)
-        barHolder.Position = UDim2.new(0.2, 0, 0.52, 0)
+        -- Title
+        local titleLabel = Instance.new("TextLabel", container)
+        titleLabel.Size = UDim2.new(1, 0, 0.15, 0)
+        titleLabel.Position = UDim2.new(0, 0, 0.12, 0)
+        titleLabel.BackgroundTransparency = 1
+        titleLabel.Text = Title
+        titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        titleLabel.Font = Enum.Font.GothamBlack
+        titleLabel.TextScaled = true
+        titleLabel.TextTransparency = 1
+
+        -- Subtitle
+        local subLabel = Instance.new("TextLabel", container)
+        subLabel.Size = UDim2.new(1, 0, 0.1, 0)
+        subLabel.Position = UDim2.new(0, 0, 0.27, 0)
+        subLabel.BackgroundTransparency = 1
+        subLabel.Text = SubTitle
+        subLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        subLabel.Font = Enum.Font.Gotham
+        subLabel.TextScaled = true
+        subLabel.TextTransparency = 1
+
+        -- Progress Holder
+        local barHolder = Instance.new("Frame", container)
+        barHolder.Size = UDim2.new(0.6, 0, 0, 28)
+        barHolder.Position = UDim2.new(0.2, 0, 0.47, 0)
         barHolder.BackgroundTransparency = 1
 
-        local bar = Instance.new("Frame", barHolder)
-        bar.Name = "ProgressBar"
-        bar.Size = UDim2.new(0, 0, 1, 0)
-        bar.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-        Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 15)
+        local progressBar = Instance.new("Frame", barHolder)
+        progressBar.Name = "ProgressBar"
+        progressBar.Size = UDim2.new(0, 0, 1, 0)
+        progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+        local barCorner = Instance.new("UICorner", progressBar)
+        barCorner.CornerRadius = UDim.new(0, 14)
 
-        local stageText = Instance.new("TextLabel", main)
-        stageText.Size = UDim2.new(0.8, 0, 0.1, 0)
-        stageText.Position = UDim2.new(0.1, 0, 0.64, 0)
-        stageText.BackgroundTransparency = 1
-        stageText.TextColor3 = Color3.new(1, 1, 1)
-        stageText.TextScaled = true
-        stageText.TextWrapped = true
-        stageText.Text = ""
-        stageText.TextTransparency = 1
-        stageText.Font = Enum.Font.GothamBold
+        -- Stage Label
+        local stageLabel = Instance.new("TextLabel", container)
+        stageLabel.Size = UDim2.new(1, 0, 0.08, 0)
+        stageLabel.Position = UDim2.new(0, 0, 0.60, 0)
+        stageLabel.BackgroundTransparency = 1
+        stageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        stageLabel.Font = Enum.Font.GothamBold
+        stageLabel.TextScaled = true
+        stageLabel.TextTransparency = 1
+        stageLabel.Text = ""
 
-        local credits = Instance.new("TextLabel", main)
+        -- Credits
+        local credits = Instance.new("TextLabel", container)
         credits.Size = UDim2.new(1, 0, 0.05, 0)
-        credits.Position = UDim2.new(0, 0, 0.95, 0)
+        credits.Position = UDim2.new(0, 0, 0.93, 0)
         credits.BackgroundTransparency = 1
         credits.Text = "Made by Kokil | LuaScripts787 | XeraUltronTEAM"
-        credits.TextScaled = true
+        credits.Font = Enum.Font.GothamItalic
         credits.TextColor3 = Color3.fromRGB(255, 255, 255)
         credits.TextTransparency = 1
-        credits.Font = Enum.Font.GothamItalic
+        credits.TextScaled = true
 
-        -- Appear animations
-        TweenService:Create(title, TweenInfo.new(1), {TextTransparency = 0}):Play()
-        TweenService:Create(subtitle, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
-        wait(1.3)
-        TweenService:Create(title, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-            TextTransparency = 0.25,
-        }):Play()
+        -- Anim Start
+        TweenService:Create(titleLabel, TweenInfo.new(1), { TextTransparency = 0 }):Play()
+        TweenService:Create(subLabel, TweenInfo.new(1.2), { TextTransparency = 0 }):Play()
+        wait(1.4)
 
+        -- Stage loop
         coroutine.wrap(function()
-            for i, text in ipairs(Stages) do
-                stageText.Text = text
-                TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-                TweenService:Create(bar, TweenInfo.new(0.6), {
-                    Size = UDim2.new(i / #Stages, 0, 1, 0),
+            for i, stageText in ipairs(Stages) do
+                stageLabel.Text = stageText
+                TweenService:Create(stageLabel, TweenInfo.new(0.3), { TextTransparency = 0 }):Play()
+                TweenService:Create(progressBar, TweenInfo.new(0.7), {
+                    Size = UDim2.new(i / #Stages, 0, 1, 0)
                 }):Play()
                 wait(1.3)
-                TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+                TweenService:Create(stageLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
                 wait(0.2)
             end
-            TweenService:Create(credits, TweenInfo.new(1), {TextTransparency = 0}):Play()
+
+            TweenService:Create(credits, TweenInfo.new(1), { TextTransparency = 0 }):Play()
             wait(2)
+
             gui:Destroy()
             blur:Destroy()
             OnFinish()
         end)()
     end
 
-    return UI
+    return XeraUI
 end
