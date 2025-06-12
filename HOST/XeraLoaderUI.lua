@@ -1,4 +1,4 @@
--- Final Silent + Clean XeraUltron Loader UI
+-- Cinematic XeraUltron Fullscreen Loader UI
 return function()
     local UI = {}
 
@@ -13,61 +13,59 @@ return function()
 
         -- Blur background
         local blur = Instance.new("BlurEffect")
-        blur.Size = 16
+        blur.Size = 20
         blur.Name = "XeraBlur"
         blur.Parent = Lighting
 
-        -- Main GUI
+        -- GUI
         local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
         gui.Name = "XeraLoaderUI"
         gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         gui.ResetOnSpawn = false
 
         local main = Instance.new("Frame", gui)
-        main.AnchorPoint = Vector2.new(0.5, 0.5)
-        main.Position = UDim2.new(0.5, 0, 0.5, 0)
-        main.Size = UDim2.new(0, 500, 0, 300)
+        main.Size = UDim2.new(1, 0, 1, 0)
+        main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
         main.BackgroundTransparency = 1
 
-        -- Title
+        -- TITLE (Big)
         local title = Instance.new("TextLabel", main)
-        title.Size = UDim2.new(1, 0, 0, 60)
-        title.Position = UDim2.new(0, 0, 0, 0)
+        title.Size = UDim2.new(1, 0, 0, 100)
+        title.Position = UDim2.new(0, 0, 0.25, 0)
         title.BackgroundTransparency = 1
-        title.Font = Enum.Font.GothamBold
+        title.Font = Enum.Font.GothamBlack
         title.Text = Title
         title.TextScaled = true
         title.TextColor3 = Color3.fromRGB(255, 255, 255)
         title.TextTransparency = 1
 
-        -- SubTitle
+        -- SUBTITLE (Medium)
         local sub = Instance.new("TextLabel", main)
-        sub.Size = UDim2.new(1, 0, 0, 40)
-        sub.Position = UDim2.new(0, 0, 0, 60)
+        sub.Size = UDim2.new(1, 0, 0, 60)
+        sub.Position = UDim2.new(0, 0, 0.35, 0)
         sub.BackgroundTransparency = 1
-        sub.Font = Enum.Font.Gotham
+        sub.Font = Enum.Font.GothamBold
         sub.Text = SubTitle
         sub.TextScaled = true
-        sub.TextColor3 = Color3.fromRGB(255, 255, 255)
+        sub.TextColor3 = Color3.fromRGB(200, 200, 200)
         sub.TextTransparency = 1
 
-        -- ProgressBar Container
+        -- PROGRESS BAR
         local barHolder = Instance.new("Frame", main)
-        barHolder.Size = UDim2.new(0.9, 0, 0, 20)
-        barHolder.Position = UDim2.new(0.05, 0, 0, 200)
+        barHolder.Size = UDim2.new(0.6, 0, 0, 30)
+        barHolder.Position = UDim2.new(0.2, 0, 0.55, 0)
         barHolder.BackgroundTransparency = 1
 
         local bar = Instance.new("Frame", barHolder)
-        bar.Size = UDim2.new(0, 0, 1, 0)
-        bar.Position = UDim2.new(0, 0, 0, 0)
-        bar.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
         bar.Name = "ProgressBar"
-        Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 12)
+        bar.Size = UDim2.new(0, 0, 1, 0)
+        bar.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+        Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 15)
 
-        -- Stage Text
+        -- STAGE TEXT (Big)
         local stageText = Instance.new("TextLabel", main)
-        stageText.Size = UDim2.new(1, 0, 0, 50)
-        stageText.Position = UDim2.new(0, 0, 0, 240)
+        stageText.Size = UDim2.new(1, 0, 0, 60)
+        stageText.Position = UDim2.new(0, 0, 0.65, 0)
         stageText.BackgroundTransparency = 1
         stageText.Font = Enum.Font.GothamMedium
         stageText.Text = ""
@@ -75,34 +73,36 @@ return function()
         stageText.TextColor3 = Color3.fromRGB(255, 255, 255)
         stageText.TextTransparency = 1
 
-        -- Credits
+        -- CREDITS
         local credits = Instance.new("TextLabel", main)
         credits.Size = UDim2.new(1, 0, 0, 30)
-        credits.Position = UDim2.new(0, 0, 0, 270)
+        credits.Position = UDim2.new(0, 0, 0.95, 0)
         credits.BackgroundTransparency = 1
-        credits.Font = Enum.Font.GothamItalic
-        credits.Text = "Developed by Kokil | LuaScripts787 | XeraUltronTEAM"
+        credits.Font = Enum.Font.Gotham
+        credits.Text = "Made by Kokil | LuaScripts787 | XeraUltronTEAM"
         credits.TextScaled = true
         credits.TextColor3 = Color3.fromRGB(255, 255, 255)
         credits.TextTransparency = 1
 
-        -- Animate In
+        -- ANIMATE IN
         TweenService:Create(title, TweenInfo.new(1), {TextTransparency = 0}):Play()
         TweenService:Create(sub, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
-        wait(1.3)
+
+        wait(1.2)
         TweenService:Create(title, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {TextTransparency = 0.3}):Play()
 
-        -- Stage cycle
+        -- LOAD STAGES
         coroutine.wrap(function()
             for i, msg in ipairs(Stages) do
                 stageText.Text = msg
-                TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-                TweenService:Create(bar, TweenInfo.new(0.5), {Size = UDim2.new(i / #Stages, 0, 1, 0)}):Play()
+                TweenService:Create(stageText, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
+                TweenService:Create(bar, TweenInfo.new(0.6), {Size = UDim2.new(i / #Stages, 0, 1, 0)}):Play()
                 wait(1.2)
-                TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
-                wait(0.2)
+                TweenService:Create(stageText, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+                wait(0.3)
             end
 
+            -- Finish
             TweenService:Create(credits, TweenInfo.new(1), {TextTransparency = 0}):Play()
             wait(2)
             blur:Destroy()
