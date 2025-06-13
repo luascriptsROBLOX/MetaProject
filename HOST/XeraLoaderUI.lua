@@ -1,4 +1,4 @@
--- ✅ Final XeraUltron Loader UI (Clean, Large, Full Render, No Logo)
+-- ✅ XeraUltron Loader UI — Refined Final Build (Clean + Fixed)
 return function()
     local TweenService = game:GetService("TweenService")
     local Players = game:GetService("Players")
@@ -20,44 +20,36 @@ return function()
     end
 
     local function createRoundedBar(parent, color)
-        local bg = Instance.new("Frame")
-        bg.Size = UDim2.new(0.8, 0, 0.06, 0)
-        bg.Position = UDim2.new(0.1, 0, 0.7, 0)
-        bg.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-        bg.BorderSizePixel = 0
-        bg.ZIndex = 9
-        bg.Parent = parent
+        local barContainer = Instance.new("Frame")
+        barContainer.Size = UDim2.new(0.8, 0, 0.06, 0)
+        barContainer.Position = UDim2.new(0.1, 0, 0.72, 0)
+        barContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+        barContainer.BorderSizePixel = 0
+        barContainer.ZIndex = 10
+        barContainer.Parent = parent
 
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 12)
-        corner.Parent = bg
+        local bgCorner = Instance.new("UICorner")
+        bgCorner.CornerRadius = UDim.new(0, 10)
+        bgCorner.Parent = barContainer
 
-        local bar = Instance.new("Frame")
-        bar.Size = UDim2.new(0, 0, 1, 0)
-        bar.Position = UDim2.new(0, 0, 0, 0)
-        bar.BackgroundColor3 = color
-        bar.BorderSizePixel = 0
-        bar.ZIndex = 10
-        bar.Parent = bg
+        local fill = Instance.new("Frame")
+        fill.Size = UDim2.new(0, 0, 1, 0)
+        fill.BackgroundColor3 = color
+        fill.BorderSizePixel = 0
+        fill.ZIndex = 11
+        fill.Parent = barContainer
 
-        local corner2 = Instance.new("UICorner")
-        corner2.CornerRadius = UDim.new(0, 12)
-        corner2.Parent = bar
+        local fillCorner = Instance.new("UICorner")
+        fillCorner.CornerRadius = UDim.new(0, 10)
+        fillCorner.Parent = fill
 
-        local glow = Instance.new("UIStroke")
-        glow.Thickness = 2
-        glow.Color = color
-        glow.Transparency = 0.3
-        glow.Parent = bar
-
-        return bar
+        return fill
     end
 
     local XeraUI = {}
 
     function XeraUI:Start(cfg)
         local player = Players.LocalPlayer
-
         local gui = Instance.new("ScreenGui")
         gui.Name = "XeraLoaderUI"
         gui.IgnoreGuiInset = true
@@ -70,41 +62,41 @@ return function()
         blur.Parent = Lighting
 
         local bg = Instance.new("Frame")
-        bg.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+        bg.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
         bg.Size = UDim2.new(1, 0, 1, 0)
         bg.BackgroundTransparency = 1
         bg.ZIndex = 5
         bg.Parent = gui
-        TweenService:Create(bg, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
 
-        local title = createLabel(bg, UDim2.new(1, 0, 0.18, 0), UDim2.new(0, 0, 0.13, 0), cfg.Title or "XeraUltron", Enum.Font.GothamBlack, Color3.new(1, 1, 1))
-        local subtitle = createLabel(bg, UDim2.new(1, 0, 0.1, 0), UDim2.new(0, 0, 0.27, 0), cfg.SubTitle or "Meta Solution Core", Enum.Font.GothamSemibold, Color3.fromRGB(180, 180, 255))
-        local stageLabel = createLabel(bg, UDim2.new(1, 0, 0.07, 0), UDim2.new(0, 0, 0.82, 0), "", Enum.Font.GothamMedium, Color3.fromRGB(255, 255, 255))
-        local credit = createLabel(bg, UDim2.new(1, 0, 0.04, 0), UDim2.new(0, 0, 0.95, 0), "Made by Kokil • LuaScripts787 • XeraTEAM", Enum.Font.GothamItalic, Color3.fromRGB(255, 255, 255))
+        TweenService:Create(bg, TweenInfo.new(0.6), {BackgroundTransparency = 0}):Play()
 
-        local bar = createRoundedBar(bg, Color3.fromRGB(0, 255, 255))
+        local title = createLabel(bg, UDim2.new(1, 0, 0.14, 0), UDim2.new(0, 0, 0.12, 0), cfg.Title or "XeraUltron", Enum.Font.GothamBlack, Color3.new(1, 1, 1))
+        local subtitle = createLabel(bg, UDim2.new(1, 0, 0.08, 0), UDim2.new(0, 0, 0.24, 0), cfg.SubTitle or "Meta Solution Core", Enum.Font.GothamMedium, Color3.fromRGB(200, 200, 255))
+        local stageText = createLabel(bg, UDim2.new(1, 0, 0.06, 0), UDim2.new(0, 0, 0.85, 0), "", Enum.Font.Gotham, Color3.new(1, 1, 1))
+        local credit = createLabel(bg, UDim2.new(1, 0, 0.03, 0), UDim2.new(0, 0, 0.96, 0), "Made by Kokil • LuaScripts787 • XeraTEAM", Enum.Font.GothamItalic, Color3.fromRGB(255, 255, 255))
 
-        TweenService:Create(title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
-        TweenService:Create(subtitle, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
-        task.wait(1.2)
+        local progressBar = createRoundedBar(bg, Color3.fromRGB(0, 255, 255))
+
+        TweenService:Create(title, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
+        TweenService:Create(subtitle, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
+        task.wait(1)
 
         local stages = cfg.Stages or {"Loading..."}
-        local total = #stages
+        local count = #stages
 
         coroutine.wrap(function()
-            for i, stage in ipairs(stages) do
-                stageLabel.Text = stage
-                TweenService:Create(stageLabel, TweenInfo.new(0.2), {TextTransparency = 0}):Play()
-                TweenService:Create(bar, TweenInfo.new(0.4), {
-                    Size = UDim2.new(i / total, 0, 1, 0)
+            for i, msg in ipairs(stages) do
+                stageText.Text = msg
+                TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+                TweenService:Create(progressBar, TweenInfo.new(0.5), {
+                    Size = UDim2.new(i / count, 0, 1, 0)
                 }):Play()
-                task.wait(1.1)
-                TweenService:Create(stageLabel, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+                task.wait(1)
+                TweenService:Create(stageText, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
             end
 
-            TweenService:Create(credit, TweenInfo.new(1), {TextTransparency = 0}):Play()
-            task.wait(1.3)
-
+            TweenService:Create(credit, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
+            task.wait(1)
             gui:Destroy()
             if blur then blur:Destroy() end
             if cfg.OnFinish then cfg.OnFinish() end
