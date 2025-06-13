@@ -7,11 +7,12 @@ return function()
         local Lighting = game:GetService("Lighting")
 
         local player = Players.LocalPlayer
-        local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+        local gui = Instance.new("ScreenGui")
         gui.Name = "XeraLoaderUI"
         gui.IgnoreGuiInset = true
         gui.ResetOnSpawn = false
         gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        gui.Parent = player:WaitForChild("PlayerGui")
 
         -- Blur effect
         local blur = Instance.new("BlurEffect")
@@ -19,19 +20,21 @@ return function()
         blur.Parent = Lighting
 
         -- Background
-        local bg = Instance.new("Frame", gui)
+        local bg = Instance.new("Frame")
         bg.Size = UDim2.new(1, 0, 1, 0)
         bg.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+        bg.Parent = gui
 
         -- Container
-        local holder = Instance.new("Frame", bg)
+        local holder = Instance.new("Frame")
         holder.AnchorPoint = Vector2.new(0.5, 0.5)
         holder.Position = UDim2.new(0.5, 0, 0.5, 0)
         holder.Size = UDim2.new(0.65, 0, 0.55, 0)
         holder.BackgroundTransparency = 1
+        holder.Parent = bg
 
         -- Title
-        local title = Instance.new("TextLabel", holder)
+        local title = Instance.new("TextLabel")
         title.Size = UDim2.new(1, 0, 0.25, 0)
         title.Position = UDim2.new(0, 0, 0, 0)
         title.Text = config.Title or "XeraUltron"
@@ -40,9 +43,10 @@ return function()
         title.TextColor3 = Color3.fromRGB(255, 255, 255)
         title.TextTransparency = 1
         title.BackgroundTransparency = 1
+        title.Parent = holder
 
         -- SubTitle
-        local subtitle = Instance.new("TextLabel", holder)
+        local subtitle = Instance.new("TextLabel")
         subtitle.Size = UDim2.new(1, 0, 0.15, 0)
         subtitle.Position = UDim2.new(0, 0, 0.25, 0)
         subtitle.Text = config.SubTitle or "Meta Solution Core"
@@ -51,31 +55,35 @@ return function()
         subtitle.TextColor3 = Color3.fromRGB(180, 180, 255)
         subtitle.TextTransparency = 1
         subtitle.BackgroundTransparency = 1
+        subtitle.Parent = holder
 
         -- Progress background
-        local barBG = Instance.new("Frame", holder)
+        local barBG = Instance.new("Frame")
         barBG.Size = UDim2.new(0.8, 0, 0.08, 0)
         barBG.Position = UDim2.new(0.1, 0, 0.55, 0)
         barBG.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
         barBG.BorderSizePixel = 0
-        local barBGCorner = Instance.new("UICorner", barBG)
+        barBG.Parent = holder
+        local barBGCorner = Instance.new("UICorner")
         barBGCorner.CornerRadius = UDim.new(0, 14)
+        barBGCorner.Parent = barBG
 
         -- Neon Progress
-        local bar = Instance.new("Frame", barBG)
+        local bar = Instance.new("Frame")
         bar.Size = UDim2.new(0, 0, 1, 0)
         bar.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
         bar.BorderSizePixel = 0
+        bar.Parent = barBG
         Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 14)
 
-        -- Glow
-        local glow = Instance.new("UIStroke", bar)
+        local glow = Instance.new("UIStroke")
         glow.Thickness = 2
         glow.Color = Color3.fromRGB(0, 255, 255)
         glow.Transparency = 0.5
+        glow.Parent = bar
 
         -- Stage text
-        local stageText = Instance.new("TextLabel", holder)
+        local stageText = Instance.new("TextLabel")
         stageText.Size = UDim2.new(1, 0, 0.1, 0)
         stageText.Position = UDim2.new(0, 0, 0.68, 0)
         stageText.Text = ""
@@ -84,9 +92,10 @@ return function()
         stageText.TextColor3 = Color3.fromRGB(255, 255, 255)
         stageText.TextTransparency = 1
         stageText.BackgroundTransparency = 1
+        stageText.Parent = holder
 
         -- Credits
-        local credits = Instance.new("TextLabel", bg)
+        local credits = Instance.new("TextLabel")
         credits.Size = UDim2.new(1, 0, 0.04, 0)
         credits.Position = UDim2.new(0, 0, 0.96, 0)
         credits.Text = "Created by Kokil | LuaScripts787 | XeraUltronTEAM"
@@ -95,6 +104,7 @@ return function()
         credits.TextScaled = true
         credits.TextTransparency = 1
         credits.BackgroundTransparency = 1
+        credits.Parent = bg
 
         -- Show headers
         TweenService:Create(title, TweenInfo.new(0.8), {TextTransparency = 0}):Play()
